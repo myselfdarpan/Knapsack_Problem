@@ -1,50 +1,60 @@
 #include <iostream>
-#include <bits/stdc++.h>
 
 using namespace std;
 
-struct Item
+void sort_it(float weight[], float value[], int n)
 {
-
-    int value;
-    int weight;
-
-    // Constructor
-    Item(int value, int weight)
+    float p[10];
+    for(int i=0;i<n;i++)
     {
-        this->value=value;
-        this->weight=weight;
+        p[i] = value[i]/weight[i];
     }
-};
+    int k;
+    for(int m=n;m>=0;m--)
+    {
+        for(int i=0;i>n-1;i++)
+        {
+            k = i+1;
+            if(p[i]>p[k])
+            {
+                float temp;
+                temp=p[i];
+                p[i]=p[k];
+                p[k]=temp;
 
-bool cmp(struct Item a, struct Item b)
-{
+                float tem;
+                tem=weight[i];
+                weight[i]=weight[k];
+                weight[k]=tem;
 
-    double r1 = (double)a.value / (double)a.weight;
-    double r2 = (double)b.value / (double)b.weight;
-    return r1 > r2;
+                tem = value[i];
+                value[i]=value[k];
+                value[k]=tem;
+
+
+            }
+        }
+    }
 }
 
-double fractionalKnapsack( int W, struct Item arr[], int n)
+
+double fractionalKnapsack( float W, float weight[], float value[], int n)
 {
-
-    sort(arr, arr + n, cmp);
-
-    int curweight = 0;
-    double finalvalue = 0.0;
+    float curweight = 0;
+    float finalvalue = 0.0;
 
     for(int i = 0;i<n;i++)
     {
-        if(curweight + arr[i].weight <= W)
+        if(curweight + weight[i] <= W)
         {
 
-            curweight += arr[i].weight;
-            finalvalue += arr[i].value;
+            curweight += weight[i];
+            finalvalue += value[i];
         }
         else
         {
-            int remain = W - curweight;
-            finalvalue += arr[i].value * ((double)remain / (double)arr[i].weight);
+            float remain = W - curweight;
+            finalvalue += value[i] * (remain / weight[i]);
             break;
         }
     }
@@ -53,12 +63,39 @@ double fractionalKnapsack( int W, struct Item arr[], int n)
 
 int main()
 {
-    int W = 50;
-    Item arr[] = {{60, 10}, {100, 20},{120, 30}};
-
-    int n = sizeof(arr)/sizeof(arr[0]);
-
+    float W;
+    int n;
+    float weight[10];
+    float value[10];
+    cout<<"Enter the number of element: "<<endl;
+    cin>>n;
+    cout<<"Enter the capacity: "<<endl;
+    cin>>W;
+    for(int i=0;i<n;i++)
+    {
+        cout<<"Enter the weight and value of "<<i+1<<" element :"<<endl;
+        cin>>weight[i]>>value[i];
+    }
+    cout<<"Items: ";
+    for(int i=0;i<n; i++)
+    {
+        cout<<"\tItem"<<i+1;
+    }
+    cout<<endl;
+    cout<<"Weight: ";
+    for(int i=0;i<n; i++)
+    {
+        cout<<"\t"<<weight[i];
+    }
+    cout<<endl;
+    cout<<"Value: ";
+    for(int i=0;i<n; i++)
+    {
+        cout<<"\t"<<value[i];
+    }
+    cout<<endl;
+    sort_it(weight, value, n);
     //Functoin call
-    cout<<"Maximum Value we obtain is: "<<fractionalKnapsack(W, arr, n);
+    cout<<"Maximum Value we obtain is: "<<fractionalKnapsack(W, weight, value, n)<<endl;
     //return 0;
 }
